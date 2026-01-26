@@ -17,7 +17,7 @@ export default function Page() {
 <p className="mt-4 text-gray-300">Butuh bantuan atau mau order? Hubungi kami lewat:</p>
 <div className="mt-6 grid gap-3">
   <a className="rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white hover:bg-white/10 transition"
-     href="https://wa.me/6280000000000" target="_blank" rel="noreferrer">
+     href="https://wa.me/6289601570287" target="_blank" rel="noreferrer">
     WhatsApp — klik untuk chat
     <div className="text-xs text-gray-400 mt-1">Ganti nomor WA di file pages/contact.js</div>
   </a>
