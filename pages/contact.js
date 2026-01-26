@@ -19,7 +19,7 @@ export default function Page() {
   <a className="rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white hover:bg-white/10 transition"
      href="https://wa.me/6289601570287" target="_blank" rel="noreferrer">
     WhatsApp — klik untuk chat
-    <div className="text-xs text-gray-400 mt-1">Ganti nomor WA di file pages/contact.js</div>
+    <div className="text-xs text-gray-400 mt-1">ADMIN.js</div>
   </a>
   <a className="rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white hover:bg-white/10 transition"
      href="mailto:hello@nerestore.com">
