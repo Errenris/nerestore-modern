@@ -183,7 +183,7 @@ export default function Home() {
           </p>
           <div className="mt-4 flex flex-wrap gap-3">
             <a
-              href="https://wa.me/6280000000000"
+              href="https://wa.me/6289601570287"
               target="_blank"
               rel="noreferrer"
               className="rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-black hover:opacity-90 transition"
