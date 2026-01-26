@@ -22,12 +22,12 @@ export default function CartModal({ open, setOpen, cart, setCart }) {
     const lines = cart.map((p, i) => `${i + 1}. ${p.displayTitle || p.title} — Rp ${formatIDR(p.price)}`)
     lines.push(`\nTotal: Rp ${formatIDR(total)}`)
     lines.push(`\nNama: `)
-    lines.push(`Alamat/Email (jika perlu): `)
+    lines.push(`Alamat/Email canva (jika perlu): `)
     return encodeURIComponent(lines.join('\n'))
   }
 
   const checkoutWA = () => {
-    const wa = '6280000000000' // ganti nomor WA kamu
+    const wa = '6289601570287' // ganti nomor WA kamu
     const url = `https://wa.me/${wa}?text=${buildMessage()}`
     window.open(url, '_blank')
   }
