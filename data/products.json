@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "title": "CANVA PRO 1 BULAN",
+    "description": "Bisa akses semua ftur pro kecuali upload font sdb",
+    "price": "4000",
+    "image": "/placeholder.png"
+  },
+  {
+    "id": 2,
+    "title": "CANVA DESIGNER 1 BULAN",
+    "description": "Unlock semua fitur bisa upload ppt dsb",
+    "price": "5000",
+    "image": "/placeholder.png"
+  },
+  {
+    "id": 3,
+    "title": "CANVA PRO 1 TAHUN",
+    "description": "Bisa akses semua ftur pro kecuali upload font sdb",
+    "price": "10000",
+    "image": "/placeholder.png"
+  },
+  {
+    "id": 4,
+    "title": "🔥CANVA PRO 1 TAHUN PROMO🔥",
+    "description": "Bisa akses semua ftur pro kecuali upload font sdb SETELAH ORDER CEK SNK ⁿᵒᵍᵃʳ ᵏᵃˡᵃᵘ ᵐᵃᵘ ᵍᵃʳᵃⁿˢⁱ ᵃᵐᵇⁱˡ ¹⁰ᵏ",
+    "price": "PRODUK KOSONG",
+    "image": "/placeholder.png"
+  }
+]
