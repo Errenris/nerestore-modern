@@ -1,51 +1,77 @@
-import Link from 'next/link'
-import { useRouter } from 'next/router'
+import { useState } from "react"
+import Head from "next/head"
+import Header from "../components/Header"
 
-export default function Header() {
-  const router = useRouter()
-  const isActive = (href) => router.pathname === href || router.pathname.startsWith(href + '/')
+export default function Bonus() {
+  const [pass, setPass] = useState("")
+  const [ok, setOk] = useState(false)
 
-  const NavLink = ({ href, children }) => (
-    <Link
-      href={href}
-      className={
-        'text-sm font-medium transition ' +
-        (isActive(href) ? 'text-white' : 'text-gray-300 hover:text-white')
-      }
-    >
-      {children}
-    </Link>
-  )
+  // GANTI PASSWORD DI SINI
+  const PASSWORD = "nerestore123"
+
+  const bonusLink = "https://pastelink.net/q1ycgxfd"
+
+  function checkPass() {
+    if (pass === PASSWORD) {
+      setOk(true)
+    } else {
+      alert("Password salah ❌")
+    }
+  }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-black/30 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-6">
-        <Link href="/" className="flex items-center gap-3">
-          <div className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-fuchsia-500 to-amber-400 text-black font-extrabold">
-            N
-          </div>
-          <div className="leading-tight">
-            <div className="text-base font-semibold text-white">Nerestore</div>
-            <div className="text-xs text-gray-400 -mt-0.5">Digital • Tools • Template</div>
-          </div>
-        </Link>
+    <>
+      <Head>
+        <title>Bonus Resource</title>
+        <meta name="robots" content="noindex,nofollow" />
+        <meta name="googlebot" content="noindex,nofollow" />
+      </Head>
 
-        <nav className="hidden items-center gap-6 md:flex">
-          <NavLink href="/">Shop</NavLink>
-          <NavLink href="/blog">Blog</NavLink>
-          <NavLink href="/about">About</NavLink>
-          <NavLink href="/contact">Contact</NavLink>
-        </nav>
+      <Header />
 
-        <div className="flex items-center gap-3">
-          <Link
-            href="/blog"
-            className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-white hover:bg-white/10 transition"
-          >
-            Baca Blog
-          </Link>
+      <main className="max-w-xl mx-auto px-6 py-20 text-white">
+        <div className="bg-white/5 border border-white/10 p-6 rounded-xl">
+
+          <h1 className="text-2xl font-bold mb-4">🔒 Bonus Resource</h1>
+
+          {!ok ? (
+            <>
+              <p className="text-gray-400 mb-4">
+                Halaman ini khusus member. Masukkan password untuk akses bonus.
+              </p>
+
+              <input
+                type="password"
+                value={pass}
+                onChange={(e) => setPass(e.target.value)}
+                placeholder="Masukkan password..."
+                className="w-full px-4 py-2 bg-black border border-white/20 rounded-lg text-white mb-3"
+              />
+
+              <button
+                onClick={checkPass}
+                className="w-full bg-gradient-to-r from-fuchsia-500 to-amber-400 text-black font-bold py-2 rounded-lg"
+              >
+                Buka Bonus
+              </button>
+            </>
+          ) : (
+            <>
+              <p className="text-green-400 mb-4">✅ Akses dibuka</p>
+
+              <a
+                href={bonusLink}
+                target="_blank"
+                rel="nofollow noopener"
+                className="block text-center bg-white/10 border border-white/20 py-3 rounded-lg hover:bg-white/20 transition"
+              >
+                🔗 Klik untuk buka Bonus Resource
+              </a>
+            </>
+          )}
+
         </div>
-      </div>
-    </header>
+      </main>
+    </>
   )
 }
