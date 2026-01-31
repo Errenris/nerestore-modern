@@ -112,7 +112,7 @@ export default function CartModal({ open, setOpen, cart, setCart }) {
           )}
 
           <p className="mt-6 text-xs text-gray-500">
-            Catatan: gunakan produk/layanan sesuai ketentuan platform terkait.
+            CATATAN: JIKA MAU BAYAR SILAHKAN KLIK LIHAT QRIS YA, GUNAKAN PRODUK/LAYANAN SESUAI KETENTUAN PLATFROM TERKAIT...!
           </p>
         </div>
       </div>
