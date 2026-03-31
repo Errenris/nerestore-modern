@@ -69,7 +69,7 @@ export default function Home() {
               </div>
 
               <h1 className="mt-4 text-4xl font-extrabold tracking-tight text-white md:text-5xl">
-                Bikin desein kamu kelihatan <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-300 to-amber-200">lebih premium</span>.
+                Bikin desain kamu kelihatan <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-300 to-amber-200">lebih premium</span>.
               </h1>
 
               <p className="mt-4 text-gray-300 leading-relaxed">
