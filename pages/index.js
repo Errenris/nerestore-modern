@@ -65,7 +65,7 @@ export default function Home() {
             <div>
               <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-xs text-cyan-300 shadow-[0_0_10px_rgba(6,182,212,0.2)]">
                 <span className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse" />
-                VPS Node.js Server : ONLINE
+                Admin : ONLINE
               </div>
 
               <h1 className="mt-6 text-4xl font-extrabold tracking-tight text-white md:text-5xl lg:text-6xl">
