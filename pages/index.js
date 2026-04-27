@@ -68,30 +68,34 @@ export default function Home() {
                 Admin : ONLINE
               </div>
 
-              {/* Style khusus animasi ketik agar tidak mengganggu CSS bawaan */}
+          {/* Style Animasi Ketik yang Super Smooth & Rapi */}
               <style dangerouslySetInnerHTML={{__html: `
-                .typing-effect {
-                  display: inline-block;
+                .typing-container {
+                  display: inline-flex;
                   overflow: hidden;
                   white-space: nowrap;
-                  border-right: 3px solid #22d3ee;
-                  width: 0;
-                  animation: typing 4s steps(15, end) infinite alternate, blink .75s step-end infinite;
+                  border-right: 4px solid #22d3ee;
+                  max-width: 0;
+                  vertical-align: bottom;
+                  padding-right: 5px;
+                  animation: smooth-reveal 4s ease-in-out infinite alternate, cursor-blink 0.8s step-end infinite;
                 }
-                @keyframes typing {
-                  0%, 20% { width: 0; }
-                  80%, 100% { width: 100%; }
+                @keyframes smooth-reveal {
+                  0%, 15% { max-width: 0; }
+                  85%, 100% { max-width: 100%; }
                 }
-                @keyframes blink {
-                  from, to { border-color: transparent }
+                @keyframes cursor-blink {
+                  0%, 100% { border-color: transparent; }
                   50% { border-color: #22d3ee; }
                 }
               `}} />
 
               <h1 className="mt-6 text-4xl font-extrabold tracking-tight text-white md:text-5xl lg:text-6xl">
                 Layanan Digital <br/>
-                <span className="typing-effect text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-lg pr-1">
-                  Super Premium
+                <span className="typing-container">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-lg pb-1">
+                    Super Premium
+                  </span>
                 </span>
               </h1>
 
