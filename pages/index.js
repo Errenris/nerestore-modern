@@ -97,11 +97,11 @@ export default function Home() {
               <div className="mt-8 grid grid-cols-3 gap-4 text-xs text-gray-300">
                 <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-4 hover:border-cyan-500/50 transition-colors">
                   <div className="text-cyan-400 font-bold text-sm">⚡ Cepat</div>
-                  <div className="mt-1">Server VPS ngebut</div>
+                  <div className="mt-1">Proses cepat</div>
                 </div>
                 <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-4 hover:border-cyan-500/50 transition-colors">
                   <div className="text-cyan-400 font-bold text-sm">🛡️ Aman</div>
-                  <div className="mt-1">Anti-delay & legal</div>
+                  <div className="mt-1">Bergaransi</div>
                 </div>
                 <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-4 hover:border-cyan-500/50 transition-colors">
                   <div className="text-cyan-400 font-bold text-sm">💬 Support</div>
@@ -183,7 +183,7 @@ export default function Home() {
         <div className="mt-12 rounded-3xl border border-cyan-500/20 bg-gradient-to-b from-cyan-900/20 to-black/40 p-6 md:p-8 backdrop-blur-lg">
           <h3 className="text-xl font-bold text-white">Butuh layanan custom?</h3>
           <p className="mt-2 text-gray-300">
-            Konsultasikan kebutuhan pembuatan Bot WA atau request fitur khusus langsung dengan admin Nerestore.
+            Butuh bantuan langsung dengan admin Nerestore.
           </p>
           <div className="mt-6 flex flex-wrap gap-4">
             <a
