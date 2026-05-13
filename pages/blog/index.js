@@ -69,8 +69,8 @@ export default function Blog({ posts }) {
           />
 
           <button
-            onClick={handleWebSearch}
-            className="rounded-2xl border border-white/10 bg-white/10 px-6 py-4 font-semibold text-white transition hover:bg-white/15"
-          >
-            Cari Web
-}
+  onClick={handleWebSearch}
+  className="rounded-2xl border border-white/10 bg-white/10 px-6 py-4 font-semibold text-white transition hover:bg-white/15"
+>
+  Cari Web
+</button>
