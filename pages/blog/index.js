@@ -13,14 +13,14 @@ export default function Blog({ posts }) {
   const [search, setSearch] = useState('')
 
   const filteredPosts = posts.filter((p) => {
-    const q = search.toLowerCase()
+  const q = search.toLowerCase()
 
-    return (
-      p.title.toLowerCase().includes(q) ||
-      p.excerpt.toLowerCase().includes(q) ||
-      p.tags.join(' ').toLowerCase().includes(q)
-    )
-  })
+  return (
+    (p.title || '').toLowerCase().includes(q) ||
+    (p.excerpt || '').toLowerCase().includes(q) ||
+    ((p.tags || []).join(' ').toLowerCase().includes(q))
+  )
+})
 
   const handleWebSearch = () => {
     if (!search.trim()) return
