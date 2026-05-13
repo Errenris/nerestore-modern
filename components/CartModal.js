@@ -27,44 +27,45 @@ export default function CartModal({ open, setOpen, cart, setCart }) {
   }
 
   const checkoutWA = () => {
-    const wa = '6289601570287' // ganti nomor WA kamu
+    const wa = '6289601570287'
     const url = `https://wa.me/${wa}?text=${buildMessage()}`
     window.open(url, '_blank')
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 backdrop-blur">
-      <div className="w-full max-w-2xl overflow-hidden rounded-3xl border border-white/10 bg-slate-950/80 shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 px-4 py-6 backdrop-blur-2xl">
+      <div className="liquid-panel w-full max-w-2xl overflow-hidden rounded-[2.25rem] shadow-[0_35px_120px_rgba(0,0,0,0.55)]">
         <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
           <div>
-            <div className="text-white font-bold">Keranjang</div>
-            <div className="text-xs text-gray-400">{cart.length} item</div>
+            <div className="text-sm font-bold uppercase tracking-[0.2em] text-cyan-100/60">Checkout</div>
+            <div className="mt-1 text-2xl font-black text-white">Keranjang</div>
+            <div className="text-xs text-slate-400">{cart.length} item siap diproses</div>
           </div>
 
           <button
             onClick={() => setOpen(false)}
-            className="rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white hover:bg-white/10 transition"
+            className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-bold text-white transition hover:bg-white/15"
           >
             Tutup
           </button>
         </div>
 
-        <div className="max-h-[60vh] overflow-auto px-6 py-5">
+        <div className="max-h-[68vh] overflow-auto px-6 py-5">
           {cart.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-white/20 p-6 text-sm text-gray-400">
-              Keranjang masih kosong.
+            <div className="rounded-[1.5rem] border border-dashed border-white/20 bg-white/[0.04] p-6 text-sm leading-6 text-slate-300">
+              Keranjang masih kosong. Silakan pilih produk terlebih dahulu.
             </div>
           ) : (
             <div className="space-y-3">
               {cart.map((p, idx) => (
-                <div key={idx} className="flex items-start justify-between gap-4 rounded-2xl border border-white/10 bg-black/20 p-4">
+                <div key={idx} className="flex items-start justify-between gap-4 rounded-[1.5rem] border border-white/10 bg-white/[0.06] p-4 backdrop-blur-xl">
                   <div>
-                    <div className="text-white font-semibold">{p.displayTitle || p.title}</div>
-                    <div className="text-sm text-gray-400">Rp {formatIDR(p.price)}</div>
+                    <div className="font-bold text-white">{p.displayTitle || p.title}</div>
+                    <div className="mt-1 text-sm text-cyan-100/70">Rp {formatIDR(p.price)}</div>
                   </div>
                   <button
                     onClick={() => removeAt(idx)}
-                    className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-white hover:bg-white/10 transition"
+                    className="rounded-full border border-rose-200/20 bg-rose-400/10 px-3 py-2 text-xs font-bold text-rose-100 transition hover:bg-rose-400/20"
                   >
                     Hapus
                   </button>
@@ -73,23 +74,25 @@ export default function CartModal({ open, setOpen, cart, setCart }) {
             </div>
           )}
 
-          <div className="mt-5 flex items-center justify-between rounded-2xl border border-white/10 bg-black/20 p-4">
-            <div className="text-sm text-gray-400">Total</div>
-            <div className="text-white font-extrabold">Rp {formatIDR(total)}</div>
+          <div className="mt-5 rounded-[1.6rem] border border-cyan-200/20 bg-cyan-300/10 p-5">
+            <div className="flex items-center justify-between">
+              <div className="text-sm font-semibold text-cyan-50/75">Total Pembayaran</div>
+              <div className="text-2xl font-black text-white">Rp {formatIDR(total)}</div>
+            </div>
           </div>
 
-          <div className="mt-4 flex flex-wrap gap-3">
+          <div className="mt-4 grid gap-3 sm:grid-cols-3">
             <button
               disabled={cart.length === 0}
               onClick={checkoutWA}
-              className="rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-black hover:opacity-90 transition disabled:opacity-40"
+              className="rounded-2xl bg-gradient-to-r from-cyan-300 to-violet-300 px-5 py-3 text-sm font-black text-slate-950 transition hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-40"
             >
-              Checkout via WhatsApp
+              Checkout WA
             </button>
 
             <button
               onClick={() => setShowQR((v) => !v)}
-              className="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10 transition"
+              className="rounded-2xl border border-white/15 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white/15"
             >
               {showQR ? 'Tutup QRIS' : 'Lihat QRIS'}
             </button>
@@ -97,22 +100,22 @@ export default function CartModal({ open, setOpen, cart, setCart }) {
             <button
               disabled={cart.length === 0}
               onClick={() => setCart([])}
-              className="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10 transition disabled:opacity-40"
+              className="rounded-2xl border border-white/15 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-40"
             >
-              Clear
+              Bersihkan
             </button>
           </div>
 
           {showQR && (
-            <div className="mt-5 rounded-2xl border border-white/10 bg-black/20 p-4">
-              <div className="text-sm text-gray-300">QRIS</div>
-              <img src="/qris.jpg" alt="QRIS" className="mt-3 w-full rounded-xl border border-white/10" />
-              <p className="mt-3 text-xs text-gray-500">Setelah transfer, kirim bukti via WhatsApp.</p>
+            <div className="mt-5 rounded-[1.5rem] border border-white/10 bg-white/[0.06] p-4">
+              <div className="text-sm font-bold text-white">QRIS Pembayaran</div>
+              <img src="/qris.jpg" alt="QRIS" className="mt-3 w-full rounded-2xl border border-white/10" />
+              <p className="mt-3 text-xs leading-5 text-slate-400">Setelah transfer, kirim bukti pembayaran via WhatsApp agar order segera diproses.</p>
             </div>
           )}
 
-          <p className="mt-6 text-xs text-gray-500">
-            CATATAN: JIKA MAU BAYAR SILAHKAN KLIK LIHAT QRIS YA, GUNAKAN PRODUK/LAYANAN SESUAI KETENTUAN PLATFROM TERKAIT...!
+          <p className="mt-6 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-xs leading-5 text-slate-400">
+            Catatan: gunakan produk dan layanan sesuai ketentuan platform terkait. Hubungi admin jika membutuhkan bantuan sebelum pembayaran.
           </p>
         </div>
       </div>

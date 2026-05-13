@@ -12,6 +12,18 @@ function formatIDR(n) {
   return new Intl.NumberFormat('id-ID').format(num)
 }
 
+const highlights = [
+  { label: 'Order selesai', value: '2K+', icon: '✦' },
+  { label: 'Support admin', value: '24/7', icon: '◌' },
+  { label: 'Garansi layanan', value: '100%', icon: '◆' }
+]
+
+const benefits = [
+  { title: 'Proses Kilat', body: 'Order diproses rapi dengan alur checkout yang simpel dan jelas.', icon: '⚡' },
+  { title: 'Aman & Bergaransi', body: 'Setiap layanan punya catatan penggunaan dan support setelah pembelian.', icon: '🛡️' },
+  { title: 'Support Responsif', body: 'Admin siap bantu konsultasi, request custom, dan konfirmasi pembayaran.', icon: '💬' }
+]
+
 export default function Home() {
   const [cart, setCart] = useState([])
   const [open, setOpen] = useState(false)
@@ -40,7 +52,7 @@ export default function Home() {
   const total = cart.reduce((sum, p) => sum + (Number(p.price) || 0), 0)
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-white selection:bg-cyan-500/30">
+    <div className="min-h-screen overflow-hidden bg-[#050816] text-white selection:bg-cyan-300/30">
       <Head>
         <title>Nerestore — Digital Store & Bot Services</title>
         <meta
@@ -50,183 +62,163 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
+      <div className="fixed inset-0 -z-10">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(34,211,238,0.24),transparent_28%),radial-gradient(circle_at_85%_10%,rgba(167,139,250,0.24),transparent_28%),linear-gradient(135deg,#020617_0%,#08111f_48%,#020617_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:72px_72px] opacity-30" />
+      </div>
+
       <Header />
 
-      {/* HERO */}
-      <section className="relative overflow-hidden">
-        {/* Background Blur Gelap Ala Luar Angkasa */}
-        <div className="absolute inset-0 -z-10 opacity-40">
-          <div className="absolute -top-24 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-cyan-600 blur-[128px]" />
-          <div className="absolute -bottom-20 right-10 h-72 w-72 rounded-full bg-blue-700 blur-[128px]" />
-        </div>
-
-        <div className="mx-auto max-w-7xl px-4 py-14 md:px-6 md:py-20">
-          <div className="grid gap-10 md:grid-cols-2 md:items-center">
+      <main>
+        <section className="relative px-4 pb-12 pt-16 md:px-6 md:pb-20 md:pt-24">
+          <div className="absolute left-1/2 top-16 -z-10 h-[34rem] w-[34rem] -translate-x-1/2 rounded-full bg-cyan-400/10 blur-[110px]" />
+          <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-xs text-cyan-300 shadow-[0_0_10px_rgba(6,182,212,0.2)]">
-                <span className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse" />
-                Admin : ONLINE
+              <div className="inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-cyan-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] backdrop-blur-2xl">
+                <span className="h-2.5 w-2.5 rounded-full bg-emerald-300 shadow-[0_0_18px_rgba(110,231,183,0.9)]" />
+                Admin Online • Fast Response
               </div>
 
-          {/* Style Animasi Ketik yang Super Smooth & Rapi */}
-              <style dangerouslySetInnerHTML={{__html: `
-                .typing-container {
-                  display: inline-flex;
-                  overflow: hidden;
-                  white-space: nowrap;
-                  border-right: 4px solid #22d3ee;
-                  max-width: 0;
-                  vertical-align: bottom;
-                  padding-right: 5px;
-                  animation: smooth-reveal 4s ease-in-out infinite alternate, cursor-blink 0.8s step-end infinite;
-                }
-                @keyframes smooth-reveal {
-                  0%, 15% { max-width: 0; }
-                  85%, 100% { max-width: 100%; }
-                }
-                @keyframes cursor-blink {
-                  0%, 100% { border-color: transparent; }
-                  50% { border-color: #22d3ee; }
-                }
-              `}} />
-
-              <h1 className="mt-6 text-4xl font-extrabold tracking-tight text-white md:text-5xl lg:text-6xl">
-                Layanan Digital <br/>
-                <span className="typing-container">
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-lg pb-1">
-                    Super Premium
-                  </span>
-                </span>
+              <h1 className="mt-7 max-w-4xl text-5xl font-black leading-[0.95] tracking-[-0.06em] text-white md:text-7xl lg:text-8xl">
+                Digital Store dengan sentuhan{' '}
+                <span className="liquid-text">Liquid Glass</span>
               </h1>
 
-              <p className="mt-5 text-gray-300 leading-relaxed text-lg">
-                Automasi Bot WhatsApp 24/7, akun premium, dan boost sosial media. Proses cepat, aman, dan bergaransi.
+              <p className="mt-7 max-w-2xl text-base leading-8 text-slate-300 md:text-lg">
+                Automasi Bot WhatsApp 24/7, akun premium, boost sosial media, dan layanan custom dalam tampilan modern yang elegan, cepat, aman, serta mudah dipesan.
               </p>
 
-              <div className="mt-8 flex flex-wrap gap-4">
+              <div className="mt-9 flex flex-col gap-3 sm:flex-row">
                 <button
                   onClick={() => document.getElementById('produk')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-[0_0_15px_rgba(6,182,212,0.4)] hover:scale-105 transition-transform"
+                  className="rounded-full bg-gradient-to-r from-cyan-300 via-sky-300 to-violet-300 px-7 py-4 text-sm font-black text-slate-950 shadow-[0_22px_70px_rgba(56,189,248,0.28)] transition hover:-translate-y-1 hover:shadow-[0_28px_80px_rgba(56,189,248,0.38)]"
                 >
-                  Lihat Produk
+                  Jelajahi Produk
                 </button>
                 <a
                   href="https://wa.me/6289601570287"
                   target="_blank"
                   rel="noreferrer"
-                  className="rounded-full border border-white/20 bg-white/5 backdrop-blur-md px-6 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
+                  className="rounded-full border border-white/15 bg-white/10 px-7 py-4 text-center text-sm font-black text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] backdrop-blur-2xl transition hover:-translate-y-1 hover:bg-white/15"
                 >
-                  Konsultasi WA
+                  Konsultasi WhatsApp
                 </a>
               </div>
 
-              <div className="mt-8 grid grid-cols-3 gap-4 text-xs text-gray-300">
-                <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-4 hover:border-cyan-500/50 transition-colors">
-                  <div className="text-cyan-400 font-bold text-sm">⚡ Cepat</div>
-                  <div className="mt-1">Proses cepat</div>
-                </div>
-                <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-4 hover:border-cyan-500/50 transition-colors">
-                  <div className="text-cyan-400 font-bold text-sm">🛡️ Aman</div>
-                  <div className="mt-1">Bergaransi</div>
-                </div>
-                <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-4 hover:border-cyan-500/50 transition-colors">
-                  <div className="text-cyan-400 font-bold text-sm">💬 Support</div>
-                  <div className="mt-1">Bantuan 24/7</div>
-                </div>
-              </div>
-            </div>
-
-            {/* CARD KERANJANG (Glassmorphism) */}
-            <div className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 md:p-8 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-white font-semibold text-lg">Keranjang Belanja</div>
-                  <div className="text-sm text-cyan-400">{cart.length} item siap bayar</div>
-                </div>
-                <button
-                  onClick={() => setOpen(true)}
-                  className="rounded-xl border border-cyan-500/50 bg-cyan-500/10 px-4 py-2 text-sm font-semibold text-cyan-400 hover:bg-cyan-500/20 transition-colors shadow-[0_0_10px_rgba(6,182,212,0.2)]"
-                >
-                  Buka
-                </button>
-              </div>
-
-              <div className="mt-6 space-y-3">
-                {cart.length === 0 ? (
-                  <div className="rounded-2xl border border-dashed border-white/20 p-6 text-center text-sm text-gray-400 bg-black/20">
-                    Keranjang masih kosong.<br/>Yuk pilih layanan di bawah!
+              <div className="mt-10 grid gap-3 sm:grid-cols-3">
+                {highlights.map((item) => (
+                  <div key={item.label} className="liquid-panel rounded-[1.5rem] p-4">
+                    <div className="text-sm text-cyan-100/70">{item.icon} {item.label}</div>
+                    <div className="mt-1 text-2xl font-black text-white">{item.value}</div>
                   </div>
-                ) : (
-                  cart.slice(-3).reverse().map((p, idx) => (
-                    <div key={idx} className="flex items-center justify-between rounded-2xl border border-white/10 bg-black/40 p-4 hover:border-cyan-500/30 transition-colors">
-                      <div className="text-sm">
-                        <div className="text-white font-semibold">{p.displayTitle || p.title}</div>
-                        <div className="text-cyan-400 mt-0.5">Rp {formatIDR(p.price)}</div>
-                      </div>
-                      <div className="text-xs text-gray-400 bg-white/5 px-2 py-1 rounded-md">x1</div>
+                ))}
+              </div>
+            </div>
+
+            <div className="liquid-panel relative rounded-[2.5rem] p-5 md:p-7">
+              <div className="absolute -right-20 -top-20 h-44 w-44 rounded-full bg-sky-300/20 blur-3xl" />
+              <div className="absolute -bottom-24 left-10 h-48 w-48 rounded-full bg-violet-400/20 blur-3xl" />
+              <div className="relative overflow-hidden rounded-[2rem] border border-white/15 bg-slate-950/35 p-5 shadow-2xl">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-sm font-bold uppercase tracking-[0.22em] text-cyan-100/60">Live Cart</div>
+                    <div className="mt-1 text-2xl font-black text-white">Keranjang Belanja</div>
+                  </div>
+                  <button
+                    onClick={() => setOpen(true)}
+                    className="rounded-full border border-cyan-200/25 bg-cyan-300/10 px-4 py-2 text-sm font-black text-cyan-100 transition hover:bg-cyan-300/20"
+                  >
+                    Buka
+                  </button>
+                </div>
+
+                <div className="mt-6 space-y-3">
+                  {cart.length === 0 ? (
+                    <div className="rounded-[1.5rem] border border-dashed border-white/20 bg-white/[0.04] p-6 text-center text-sm leading-6 text-slate-300">
+                      Keranjang masih kosong.<br />Pilih layanan favorit kamu di bawah.
                     </div>
-                  ))
-                )}
-              </div>
+                  ) : (
+                    cart.slice(-3).reverse().map((p, idx) => (
+                      <div key={idx} className="flex items-center justify-between gap-3 rounded-[1.4rem] border border-white/10 bg-white/[0.06] p-4 backdrop-blur-xl">
+                        <div className="text-sm">
+                          <div className="font-bold text-white">{p.displayTitle || p.title}</div>
+                          <div className="mt-0.5 text-cyan-200">Rp {formatIDR(p.price)}</div>
+                        </div>
+                        <div className="rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-white/70">x1</div>
+                      </div>
+                    ))
+                  )}
+                </div>
 
-              <div className="mt-6 flex items-center justify-between rounded-2xl border border-cyan-500/30 bg-cyan-900/20 p-4 shadow-[inset_0_0_10px_rgba(6,182,212,0.1)]">
-                <div className="text-sm text-cyan-100">Total Harga</div>
-                <div className="text-cyan-400 font-bold text-lg">Rp {formatIDR(total)}</div>
+                <div className="mt-6 rounded-[1.6rem] border border-cyan-200/20 bg-cyan-300/10 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]">
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm font-semibold text-cyan-50/75">Total Harga</div>
+                    <div className="text-2xl font-black text-white">Rp {formatIDR(total)}</div>
+                  </div>
+                  <p className="mt-3 text-xs leading-5 text-cyan-50/55">Checkout diarahkan ke WhatsApp agar konfirmasi pembayaran lebih cepat.</p>
+                </div>
               </div>
-
-              <p className="mt-4 text-xs text-gray-500 text-center">
-                Garansi layanan aktif sesuai masa pembelian.
-              </p>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* PRODUCTS */}
-      <section id="produk" className="mx-auto max-w-7xl px-4 py-12 md:px-6">
-        <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
-          <div>
-            <h2 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">Etalase Produk</h2>
-            <p className="mt-2 text-cyan-400/80">Pilih paket layanan yang kamu butuhkan hari ini.</p>
+        <section className="mx-auto max-w-7xl px-4 py-8 md:px-6">
+          <div className="grid gap-4 md:grid-cols-3">
+            {benefits.map((item) => (
+              <div key={item.title} className="liquid-card rounded-[2rem] p-6">
+                <div className="grid h-12 w-12 place-items-center rounded-2xl border border-white/15 bg-white/10 text-xl shadow-inner">{item.icon}</div>
+                <h2 className="mt-5 text-xl font-black text-white">{item.title}</h2>
+                <p className="mt-2 text-sm leading-6 text-slate-300/80">{item.body}</p>
+              </div>
+            ))}
           </div>
+        </section>
 
-          <button
-            onClick={() => setOpen(true)}
-            className="mt-3 w-full rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-[0_0_15px_rgba(6,182,212,0.4)] hover:scale-105 transition-transform md:mt-0 md:w-auto"
-          >
-            Lihat Keranjang ({cart.length})
-          </button>
-        </div>
-
-        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {products.map((p) => (
-            <div key={p.id} className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md p-1 hover:border-cyan-500/50 transition-colors shadow-lg">
-              <ProductCard product={p} onAdd={() => addToCart(p)} />
+        <section id="produk" className="mx-auto max-w-7xl px-4 py-14 md:px-6 md:py-20">
+          <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+            <div>
+              <div className="text-sm font-bold uppercase tracking-[0.24em] text-cyan-200/65">Premium Catalog</div>
+              <h2 className="mt-3 text-4xl font-black tracking-[-0.04em] text-white md:text-5xl">Etalase Produk</h2>
+              <p className="mt-3 max-w-2xl text-slate-300">Pilih paket layanan yang kamu butuhkan hari ini. Semua kartu dibuat lebih bersih, modern, dan premium.</p>
             </div>
-          ))}
-        </div>
 
-        <div className="mt-12 rounded-3xl border border-cyan-500/20 bg-gradient-to-b from-cyan-900/20 to-black/40 p-6 md:p-8 backdrop-blur-lg">
-          <h3 className="text-xl font-bold text-white">Butuh layanan custom?</h3>
-          <p className="mt-2 text-gray-300">
-            Butuh bantuan langsung dengan admin Nerestore.
-          </p>
-          <div className="mt-6 flex flex-wrap gap-4">
-            <a
-              href="https://wa.me/6289601570287"
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-full bg-emerald-500 px-6 py-3 text-sm font-bold text-white shadow-[0_0_15px_rgba(16,185,129,0.4)] hover:scale-105 transition-transform"
+            <button
+              onClick={() => setOpen(true)}
+              className="rounded-full border border-white/15 bg-white/10 px-6 py-4 text-sm font-black text-white backdrop-blur-2xl transition hover:-translate-y-1 hover:bg-white/15 md:w-auto"
             >
-              Chat WhatsApp
-            </a>
+              Lihat Keranjang ({cart.length})
+            </button>
           </div>
-        </div>
-      </section>
 
-      {/* TOAST */}
+          <div className="mt-9 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {products.map((p) => (
+              <ProductCard key={p.id} product={p} onAdd={() => addToCart(p)} />
+            ))}
+          </div>
+
+          <div className="liquid-panel relative mt-14 overflow-hidden rounded-[2.5rem] p-7 md:p-10">
+            <div className="absolute right-0 top-0 h-40 w-40 rounded-full bg-emerald-300/20 blur-3xl" />
+            <div className="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+              <div>
+                <div className="text-sm font-bold uppercase tracking-[0.22em] text-emerald-100/60">Custom Service</div>
+                <h3 className="mt-2 text-3xl font-black text-white">Butuh layanan custom?</h3>
+                <p className="mt-2 max-w-2xl text-slate-300">Diskusikan kebutuhan bot, akun premium, desain, atau request khusus langsung dengan admin Nerestore.</p>
+              </div>
+              <a
+                href="https://wa.me/6289601570287"
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-full bg-emerald-300 px-7 py-4 text-center text-sm font-black text-emerald-950 shadow-[0_22px_60px_rgba(52,211,153,0.24)] transition hover:-translate-y-1"
+              >
+                Chat WhatsApp
+              </a>
+            </div>
+          </div>
+        </section>
+      </main>
+
       {toast.open && (
-        <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-full border border-cyan-500/50 bg-black/90 px-6 py-3 text-sm font-semibold text-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.4)] backdrop-blur">
+        <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-full border border-cyan-200/25 bg-slate-950/80 px-6 py-3 text-sm font-black text-cyan-100 shadow-[0_20px_70px_rgba(34,211,238,0.24)] backdrop-blur-2xl">
           {toast.message}
         </div>
       )}
