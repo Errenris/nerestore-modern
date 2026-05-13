@@ -50,11 +50,12 @@ export default function Blog({ posts }) {
       `site:nerestore.vercel.app ${search}`
     )
 
-    window.open(
+   window.open(
   `https://www.google.com/search?q=${query}`,
   '_blank',
   'noopener,noreferrer'
 )
+  }
 
   return (
     <>
