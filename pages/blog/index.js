@@ -4,6 +4,23 @@ import Footer from '../../components/Footer'
 import Link from 'next/link'
 import { getAllPosts } from '../../data/posts'
 import { useState } from 'react'
+const formatRelativeDate = (dateString) => {
+  const now = new Date()
+  const date = new Date(dateString)
+
+  const diffTime = now - date
+
+  const minutes = Math.floor(diffTime / (1000 * 60))
+  const hours = Math.floor(diffTime / (1000 * 60 * 60))
+  const days = Math.floor(diffTime / (1000 * 60 * 60 * 24))
+
+  if (minutes < 1) return 'Baru saja'
+  if (minutes < 60) return `${minutes} menit lalu`
+  if (hours < 24) return `${hours} jam lalu`
+  if (days < 30) return `${days} hari lalu`
+
+  return date.toLocaleDateString('id-ID')
+}
 
 export async function getStaticProps() {
   return {
@@ -16,7 +33,7 @@ export async function getStaticProps() {
 export default function Blog({ posts }) {
   const [search, setSearch] = useState('')
 
-  const filteredPosts = posts.filter((p) => {
+  const filteredPosts = (posts || []).filter((p) => {
     const q = search.toLowerCase()
 
     return (
@@ -34,10 +51,10 @@ export default function Blog({ posts }) {
     )
 
     window.open(
-      `https://www.google.com/search?q=${query}`,
-      '_blank'
-    )
-  }
+  `https://www.google.com/search?q=${query}`,
+  '_blank',
+  'noopener,noreferrer'
+)
 
   return (
     <>
@@ -102,7 +119,7 @@ export default function Blog({ posts }) {
               className="group rounded-3xl border border-white/10 bg-white/5 p-6 transition hover:bg-white/10"
             >
               <div className="flex items-center gap-2 text-xs text-gray-400">
-                <span>{p.date}</span>
+                <span>{formatRelativeDate(p.date)}</span>
 
                 <span>•</span>
 
