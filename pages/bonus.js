@@ -1,9 +1,11 @@
+import { useState } from "react";
 import Head from "next/head";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 export default function Bonus() {
   const bonusLink = "https://pastelink.net/q1ycgxfd";
+  const [showDonationPopup, setShowDonationPopup] = useState(true);
 
   return (
     <>
@@ -48,6 +50,30 @@ export default function Bonus() {
           </div>
         </div>
       </main>
+
+      {showDonationPopup && (
+        <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/75 px-4 backdrop-blur-sm">
+          <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-slate-900/95 p-5 shadow-2xl">
+            <h2 className="text-xl font-bold">Dukung Nerestore 💙</h2>
+            <p className="mt-2 text-sm text-gray-300">
+              Donasi seikhlasnya via QRIS ya. Terima kasih sudah support 🙏
+            </p>
+
+            <img
+              src="/qris.jpg"
+              alt="QRIS Donasi"
+              className="mt-4 w-full rounded-xl border border-white/10"
+            />
+
+            <button
+              onClick={() => setShowDonationPopup(false)}
+              className="mt-4 w-full rounded-xl bg-emerald-500 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-600"
+            >
+              Oke min
+            </button>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </>
