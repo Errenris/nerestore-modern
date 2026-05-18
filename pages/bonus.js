@@ -3,7 +3,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 export default function Bonus() {
-  const bonusLink = "https://pastelink.net/q1ycgxfd";
+  const bonusLink = "https://formssternlystately.com/pgqekau7v?key=535680d0e31867b4a1111bf6e38404e6";
 
   return (
     <>
