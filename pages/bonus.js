@@ -54,7 +54,7 @@ export default function Bonus() {
       {showDonationPopup && (
         <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/75 px-4 backdrop-blur-sm">
           <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-slate-900/95 p-5 shadow-2xl">
-            <h2 className="text-xl font-bold">Dukung Nerestore 💙</h2>
+            <h2 className="text-xl font-bold">Dukung TIMALIPRO 💙</h2>
             <p className="mt-2 text-sm text-gray-300">
               Donasi seikhlasnya via QRIS ya. Terima kasih sudah support 🙏
             </p>
