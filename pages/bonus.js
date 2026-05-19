@@ -4,7 +4,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 export default function Bonus() {
-  const bonusLink = "https://pastelink.net/q1ycgxfd";
+  const bonusLink = "https://pastelink.net/asioaqw8";
   const [showDonationPopup, setShowDonationPopup] = useState(true);
 
   return (
