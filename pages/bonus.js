@@ -4,7 +4,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 export default function Bonus() {
-  const bonusLink = "https://webambilcanva.vercel.app";
+  const bonusLink = "https://freetimalitpro.vercel.app";
   const [showDonationPopup, setShowDonationPopup] = useState(true);
 
   return (
