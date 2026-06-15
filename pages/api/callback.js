@@ -5,11 +5,15 @@ export default async function handler(req, res) {
 
   try {
     const payload = req.body;
-    const orderId = payload.order_id || payload.reference;
-    const status = String(payload.status || payload.transaction_status).toLowerCase();
+    // INI CCTV KITA: Akan mencatat apa pun yang dikirim Pakasir ke Vercel Logs
+    console.log("🚨 WEBHOOK DARI PAKASIR MASUK:", payload); 
+
+    // Mencari ID pesanan dari Pakasir (biasanya pakai order_id atau reference)
+    const orderId = payload.order_id || payload.reference || payload.id; 
+    const status = String(payload.status || payload.transaction_status || payload.state).toLowerCase();
     
     // Pastikan status bayar lunas
-    const isSuccess = ['success', 'paid', 'settlement'].includes(status);
+    const isSuccess = ['success', 'paid', 'settlement', 'berhasil'].includes(status);
 
     if (isSuccess && orderId) {
       const client = await clientPromise;
@@ -41,10 +45,12 @@ export default async function handler(req, res) {
           { orderId },
           { $set: { status: 'PAID', linksGiven: assignedLinks } }
         );
+        console.log("✅ ORDER", orderId, "BERHASIL DIPROSES & LINK DIBERIKAN!");
       }
     }
     res.status(200).json({ message: 'OK' });
   } catch (error) {
+    console.error("❌ ERROR WEBHOOK:", error);
     res.status(500).json({ message: 'Error' });
   }
 }
