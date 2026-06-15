@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import { useMemo, useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import ProductCard from '../components/ProductCard'
@@ -39,10 +39,7 @@ const features = [
 
 const containerVariants = {
   hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15 }
-  }
+  show: { opacity: 1, transition: { staggerChildren: 0.15 } }
 }
 
 const itemVariants = {
@@ -54,6 +51,11 @@ export default function Home() {
   const [cart, setCart] = useState([])
   const [open, setOpen] = useState(false)
   const [toast, setToast] = useState({ open: false, message: '' })
+
+  // Parallax Scroll Hooks
+  const { scrollYProgress } = useScroll()
+  const bgY1 = useTransform(scrollYProgress, [0, 1], ['0%', '50%'])
+  const bgY2 = useTransform(scrollYProgress, [0, 1], ['0%', '-50%'])
 
   const products = useMemo(() => {
     return productsRaw.map((p) => ({
@@ -77,36 +79,40 @@ export default function Home() {
 
   const total = cart.reduce((sum, p) => sum + (Number(p.price) || 0), 0)
 
+  // Split teks untuk animasi Text Reveal
+  const titleWords = "Nerestore untuk kebutuhan digital kamu.".split(" ")
+
   return (
     <>
       <Head>
         <title>Nerestore — Digital Store & Bot Services</title>
-        <meta
-          name="description"
-          content="Nerestore: template, tools, dan layanan digital dengan tampilan modern liquid glass."
-        />
+        <meta name="description" content="Nerestore: template, tools, dan layanan digital dengan tampilan modern liquid glass." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
       <div className="relative min-h-screen overflow-hidden bg-slate-950 text-white">
-        {/* Animated Background */}
-        <div className="fixed inset-0 -z-10">
+        
+        {/* PARALLAX BACKGROUND */}
+        <div className="fixed inset-0 -z-10 overflow-hidden">
           <motion.div 
-            animate={{ scale: [1, 1.05, 1], opacity: [0.8, 1, 0.8] }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(34,211,238,0.24),transparent_28%),radial-gradient(circle_at_85%_10%,rgba(167,139,250,0.24),transparent_28%),linear-gradient(135deg,#020617_0%,#08111f_48%,#020617_100%)]" 
+            style={{ y: bgY1 }}
+            className="absolute -top-[10%] -left-[10%] w-[50vw] h-[50vw] rounded-full bg-cyan-500/10 blur-[100px]" 
+          />
+          <motion.div 
+            style={{ y: bgY2 }}
+            className="absolute top-[40%] -right-[10%] w-[40vw] h-[40vw] rounded-full bg-violet-500/10 blur-[100px]" 
           />
           <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:72px_72px] opacity-30" />
         </div>
 
         <Header cartCount={cart.length} onCart={() => setOpen(true)} />
 
-        <main className="mx-auto max-w-7xl px-4 pb-16 pt-10 sm:px-6 lg:px-8">
+        <main className="mx-auto max-w-7xl pb-16 pt-10">
           <motion.section 
             variants={containerVariants}
             initial="hidden"
             animate="show"
-            className="grid items-center gap-10 py-12 lg:grid-cols-2"
+            className="grid items-center gap-10 px-4 py-12 sm:px-6 lg:px-8 lg:grid-cols-2"
           >
             <motion.div variants={itemVariants}>
               <motion.div 
@@ -116,15 +122,26 @@ export default function Home() {
                 ✨ Digital Store Premium
               </motion.div>
 
-              <h1 className="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl liquid-text">
-                Nerestore untuk kebutuhan digital kamu.
+              {/* TEXT REVEAL ANIMATION */}
+              <h1 className="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl flex flex-wrap gap-x-3 gap-y-1">
+                {titleWords.map((word, index) => (
+                  <motion.span
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: index * 0.1, type: "spring", stiffness: 120 }}
+                    className="liquid-text inline-block"
+                  >
+                    {word}
+                  </motion.span>
+                ))}
               </h1>
 
-              <p className="mt-5 max-w-xl text-base leading-8 text-slate-300">
+              <motion.p variants={itemVariants} className="mt-5 max-w-xl text-base leading-8 text-slate-300">
                 Belanja produk digital, tools, template, dan layanan bot dengan proses cepat, tampilan modern, dan support admin responsif.
-              </p>
+              </motion.p>
 
-              <div className="mt-8 flex flex-wrap gap-3">
+              <motion.div variants={itemVariants} className="mt-8 flex flex-wrap gap-3">
                 <motion.a
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -142,7 +159,7 @@ export default function Home() {
                 >
                   Keranjang • Rp{formatIDR(total)}
                 </motion.button>
-              </div>
+              </motion.div>
 
               <motion.div variants={containerVariants} className="mt-8 grid gap-3 sm:grid-cols-3">
                 {highlights.map((item) => (
@@ -162,8 +179,9 @@ export default function Home() {
 
             <motion.div 
               variants={itemVariants}
-              whileHover={{ y: -10 }}
-              className="rounded-[2rem] border border-white/10 bg-white/10 p-5 shadow-[0_0_50px_rgba(139,92,246,0.15)] backdrop-blur"
+              whileHover={{ y: -10, rotateY: -5, rotateX: 5 }}
+              style={{ perspective: 1000 }}
+              className="rounded-[2rem] border border-white/10 bg-white/10 p-5 shadow-[0_0_50px_rgba(139,92,246,0.15)] backdrop-blur transition-transform duration-500"
             >
               <div className="rounded-[1.5rem] bg-slate-950/70 p-6">
                 <div className="text-sm text-cyan-200">Checkout Preview</div>
@@ -191,12 +209,32 @@ export default function Home() {
             </motion.div>
           </motion.section>
 
+          {/* INFINITE MARQUEE */}
+          <div className="mt-10 overflow-hidden border-y border-white/10 bg-white/5 py-4 backdrop-blur-md">
+            <div className="animate-marquee flex gap-12 text-sm font-bold tracking-[0.2em] uppercase text-cyan-200/80">
+              {/* Grup ke-1 */}
+              <span className="flex items-center gap-12 whitespace-nowrap">
+                <span>⚡ PROSES KILAT</span><span>•</span>
+                <span>🛡️ TRANSAKSI AMAN</span><span>•</span>
+                <span>✨ TAMPILAN PREMIUM</span><span>•</span>
+                <span>💎 GARANSI LAYANAN</span><span>•</span>
+              </span>
+              {/* Grup ke-2 untuk looping mulus */}
+              <span className="flex items-center gap-12 whitespace-nowrap" aria-hidden="true">
+                <span>⚡ PROSES KILAT</span><span>•</span>
+                <span>🛡️ TRANSAKSI AMAN</span><span>•</span>
+                <span>✨ TAMPILAN PREMIUM</span><span>•</span>
+                <span>💎 GARANSI LAYANAN</span><span>•</span>
+              </span>
+            </div>
+          </div>
+
           <motion.section 
             variants={containerVariants}
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, margin: "-100px" }}
-            className="grid gap-4 py-8 sm:grid-cols-3"
+            className="grid gap-4 py-12 px-4 sm:px-6 lg:px-8 sm:grid-cols-3"
           >
             {stats.map((item) => (
               <motion.div
@@ -217,7 +255,7 @@ export default function Home() {
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, margin: "-100px" }}
-            className="py-10"
+            className="py-10 px-4 sm:px-6 lg:px-8"
           >
             <motion.div variants={itemVariants} className="mb-7">
               <h2 className="text-3xl font-black">Kenapa pilih Nerestore?</h2>
@@ -242,7 +280,7 @@ export default function Home() {
             </motion.div>
           </motion.section>
 
-          <section id="products" className="py-10">
+          <section id="products" className="py-10 px-4 sm:px-6 lg:px-8">
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -278,19 +316,20 @@ export default function Home() {
           </section>
         </main>
 
-        {toast.open && (
-          <motion.div 
-            initial={{ opacity: 0, y: 50, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 50, scale: 0.9 }}
-            className="fixed bottom-5 right-5 z-50 max-w-sm rounded-2xl border border-white/10 bg-white px-5 py-4 text-sm font-bold text-slate-950 shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
-          >
-            {toast.message}
-          </motion.div>
-        )}
+        <AnimatePresence>
+          {toast.open && (
+            <motion.div 
+              initial={{ opacity: 0, y: 50, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 50, scale: 0.9 }}
+              className="fixed bottom-5 right-5 z-50 max-w-sm rounded-2xl border border-white/10 bg-white px-5 py-4 text-sm font-bold text-slate-950 shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+            >
+              {toast.message}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <CartModal open={open} setOpen={setOpen} cart={cart} setCart={setCart} />
-
         <Footer />
       </div>
     </>
