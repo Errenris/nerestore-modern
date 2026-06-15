@@ -20,4 +20,12 @@
     "price": "9000",
     "image": "/placeholder.png"
   }
+  },
+  {
+    "id": 4,
+    "title": "test",
+    "description": "Bisa akses semua ftur pro kecuali upload font sdb",
+    "price": "500",
+    "image": "/placeholder.png"
+  }
 ]
