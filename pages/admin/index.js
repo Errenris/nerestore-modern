@@ -33,27 +33,31 @@ export default function AdminDashboard() {
       })
       
       if (response.ok) {
-        alert("Produk berhasil disimpan ke Vercel Postgres Database! 🎉")
+        alert("Produk berhasil disimpan ke MongoDB! 🎉")
         setIsAdding(false)
         setNewProduct({ title: '', price: '', description: '', stock: 99 })
         refreshProducts()
       } else {
-        alert("Gagal menambahkan produk.")
+        // INI YANG BARU: Menangkap pesan error asli dari Vercel/MongoDB
+        const errData = await response.json()
+        alert("GAGAL: " + (errData.error || errData.message || "Kesalahan Server tidak diketahui"))
       }
     } catch (err) {
-      alert("Terjadi kesalahan koneksi.")
+      alert("Terjadi kesalahan koneksi jaringan.")
     }
     setIsLoading(false)
   }
 
   const handleDelete = async (id) => {
     if (!confirm("Apakah kamu yakin ingin menghapus produk ini?")) return
-    
     try {
       const response = await fetch(`/api/products?id=${id}`, { method: 'DELETE' })
       if (response.ok) {
         alert("Produk berhasil dihapus secara permanen!")
         refreshProducts()
+      } else {
+        const errData = await response.json()
+        alert("Gagal Hapus: " + (errData.error || errData.message))
       }
     } catch (err) {
       alert("Gagal menghapus produk.")
@@ -73,8 +77,8 @@ export default function AdminDashboard() {
         <main className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8 flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-black liquid-text">Dashboard Admin (Live DB)</h1>
-              <p className="text-slate-400">Kelola produk jualan asli di database awan Vercel.</p>
+              <h1 className="text-3xl font-black liquid-text">Dashboard Admin</h1>
+              <p className="text-slate-400">Kelola produk jualan asli di MongoDB.</p>
             </div>
             <button 
               onClick={() => setIsAdding(!isAdding)}
