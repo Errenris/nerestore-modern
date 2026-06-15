@@ -7,29 +7,30 @@ export default async function handler(req, res) {
 
   const { cart } = req.body;
   
-  // Hitung total belanja
+  if (!cart || cart.length === 0) {
+    return res.status(400).json({ message: 'Keranjang kosong' })
+  }
+
+  // Hitung total belanja dari item di keranjang
   const amount = cart.reduce((sum, item) => sum + (Number(item.price) || 0), 0)
-  
-  // Buat ID Order Unik
   const orderId = `NRS-${Date.now()}`
 
   try {
-    // Inisialisasi Klien Pakasir
+    // Inisialisasi Klien Pakasir menggunakan env Vercel
     const pakasir = new Pakasir({
-      project: process.env.PAKASIR_PROJECT, // Setup di Vercel: nama slug project
-      api_key: process.env.PAKASIR_API_KEY  // Setup di Vercel: API Key
+      project: process.env.PAKASIR_PROJECT, 
+      api_key: process.env.PAKASIR_API_KEY  
     });
 
-    // Melakukan request pembuatan URL Pembayaran
+    // Request Link Pembayaran QRIS
     const transaction = await pakasir.createTransaction(
       orderId,
-      'QRIS', // Metode Pembayaran utama
+      'QRIS', 
       amount,
-      false, // Jangan buat direct QRIS, agar masuk ke Payment Page
-      'https://nerestore.vercel.app/' // URL kembali setelah sukses bayar
+      false, 
+      'https://nerestore.vercel.app/' // URL kembali setelah bayar sukses
     );
 
-    // Mengecek apakah Pakasir mengembalikan URL pembayaran
     if (transaction && transaction.payment && transaction.payment.payment_url) {
       res.status(200).json({ paymentUrl: transaction.payment.payment_url })
     } else {
