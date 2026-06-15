@@ -19,7 +19,6 @@ export default function CartModal({ open, setOpen, cart, setCart }) {
 
   const removeAt = (idx) => setCart((prev) => prev.filter((_, i) => i !== idx))
 
-  // Fungsi Checkout Baru (Otomatis via Pakasir)
   const checkoutPakasir = async () => {
     setIsLoading(true)
     try {
@@ -32,7 +31,6 @@ export default function CartModal({ open, setOpen, cart, setCart }) {
       const data = await response.json()
       
       if (data.paymentUrl) {
-        // Arahkan pembeli ke halaman pembayaran Pakasir
         window.location.href = data.paymentUrl
       } else {
         alert("Gagal memproses pembayaran. Pastikan API Key Pakasir valid di Vercel.")
@@ -52,13 +50,7 @@ export default function CartModal({ open, setOpen, cart, setCart }) {
             <div className="mt-1 text-2xl font-black text-white">Keranjang</div>
             <div className="text-xs text-slate-400">{cart.length} item siap diproses</div>
           </div>
-
-          <button
-            onClick={() => setOpen(false)}
-            className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-bold text-white transition hover:bg-white/15"
-          >
-            Tutup
-          </button>
+          <button onClick={() => setOpen(false)} className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-bold text-white transition hover:bg-white/15">Tutup</button>
         </div>
 
         <div className="max-h-[68vh] overflow-auto px-6 py-5">
@@ -74,12 +66,7 @@ export default function CartModal({ open, setOpen, cart, setCart }) {
                     <div className="font-bold text-white">{p.displayTitle || p.title}</div>
                     <div className="mt-1 text-sm text-cyan-100/70">Rp {formatIDR(p.price)}</div>
                   </div>
-                  <button
-                    onClick={() => removeAt(idx)}
-                    className="rounded-full border border-rose-200/20 bg-rose-400/10 px-3 py-2 text-xs font-bold text-rose-100 transition hover:bg-rose-400/20"
-                  >
-                    Hapus
-                  </button>
+                  <button onClick={() => removeAt(idx)} className="rounded-full border border-rose-200/20 bg-rose-400/10 px-3 py-2 text-xs font-bold text-rose-100 transition hover:bg-rose-400/20">Hapus</button>
                 </div>
               ))}
             </div>
@@ -100,21 +87,8 @@ export default function CartModal({ open, setOpen, cart, setCart }) {
             >
               {isLoading ? 'Memproses...' : 'Checkout Otomatis (Pakasir)'}
             </button>
-
-            <button
-              onClick={() => setShowQR((v) => !v)}
-              className="rounded-2xl border border-white/15 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white/15"
-            >
-              {showQR ? 'Tutup QRIS' : 'Lihat QRIS'}
-            </button>
-
-            <button
-              disabled={cart.length === 0}
-              onClick={() => setCart([])}
-              className="rounded-2xl border border-white/15 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              Bersihkan
-            </button>
+            <button onClick={() => setShowQR((v) => !v)} className="rounded-2xl border border-white/15 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white/15">{showQR ? 'Tutup QRIS' : 'Lihat QRIS'}</button>
+            <button disabled={cart.length === 0} onClick={() => setCart([])} className="rounded-2xl border border-white/15 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-40">Bersihkan</button>
           </div>
 
           {showQR && (
