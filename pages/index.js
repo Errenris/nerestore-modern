@@ -82,6 +82,15 @@ export default function Home() {
   }
 
   const addToCart = (p) => {
+    // Cek berapa banyak item ini yang sudah dimasukkan ke keranjang
+    const countInCart = cart.filter(item => item.id === p.id).length;
+    
+    // Cegah masuk keranjang jika sudah melebihi stok yang ada
+    if (countInCart >= Number(p.stock)) {
+      showToast(`Maksimal stok ${p.displayTitle || p.title} hanya ${p.stock}!`);
+      return;
+    }
+
     setCart((prev) => [...prev, p])
     showToast(`${p.displayTitle || p.title} ditambahkan ke keranjang`)
   }
