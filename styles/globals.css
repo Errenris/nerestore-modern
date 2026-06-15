@@ -48,25 +48,36 @@ body::before {
   mask: linear-gradient(#000, transparent 58%);
 }
 
+.card {
+  @apply rounded-2xl bg-slate-800/60 p-4 shadow-lg backdrop-blur-md;
+}
+
+/* --- ANIMASI BARU DITAMBAHKAN DI BAWAH SINI --- */
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
 .liquid-text {
   background: linear-gradient(100deg, #ffffff 0%, #a5f3fc 24%, #7dd3fc 52%, #c4b5fd 78%, #ffffff 100%);
   background-size: 220% auto;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 22px 52px rgba(34, 211, 238, 0.24));
-  animation: liquid-shine 5s ease-in-out infinite alternate;
-}
-
-.card {
-  @apply rounded-2xl bg-slate-800/60 p-4 shadow-lg backdrop-blur-md;
+  filter: drop-shadow(0 0 15px rgba(34, 211, 238, 0.4));
+  animation: liquid-shine 4s linear infinite;
 }
 
 @keyframes liquid-shine {
   from {
     background-position: 0% 50%;
   }
-
   to {
     background-position: 100% 50%;
   }
