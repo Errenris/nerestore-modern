@@ -1,4 +1,3 @@
-
 import Head from 'next/head'
 import { useMemo, useState } from 'react'
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
@@ -7,6 +6,8 @@ import Footer from '../components/Footer'
 import ProductCard from '../components/ProductCard'
 import CartModal from '../components/CartModal'
 import productsRaw from '../data/products.json'
+
+// ... (dan lanjutan kode ke bawahnya)
 
 function formatIDR(n) {
   const num = Number(n)
