@@ -1,34 +1,86 @@
-import { sql } from '@vercel/postgres';
-
 export default async function handler(req, res) {
+  // Mengambil kunci rahasia Redis dari Vercel persis seperti di screenshot kamu
+  const KV_URL = process.env.stok_KV_REST_API_URL;
+  const KV_TOKEN = process.env.stok_KV_REST_API_TOKEN;
+
+  if (!KV_URL || !KV_TOKEN) {
+    return res.status(500).json({ error: 'Database belum terhubung dengan benar di Vercel' });
+  }
+
+  const headers = {
+    Authorization: `Bearer ${KV_TOKEN}`,
+    'Content-Type': 'application/json',
+  };
+
   try {
-    // 1. Ambil Semua Produk dari Database
+    // 1. Ambil Semua Produk
     if (req.method === 'GET') {
-      const { rows } = await sql`SELECT * FROM products ORDER BY id DESC;`;
-      return res.status(200).json(rows);
-    }
-
-    // 2. Tambah Produk Baru dari Dashboard Admin
-    if (req.method === 'POST') {
-      const { title, description, price, stock, image } = req.body;
+      const response = await fetch(`${KV_URL}/get/nerestore_products`, { headers });
+      const data = await response.json();
       
-      if (!title || !price) {
-        return res.status(400).json({ message: 'Nama dan Harga wajib diisi' });
+      let products = [];
+      if (data.result) {
+        products = JSON.parse(data.result);
+      } else {
+        // Jika database masih kosong, otomatis buatkan data awal untuk tes
+        products = [
+          { id: 1, title: 'CANVA PRO 1 BULAN', description: 'Bisa akses semua fitur pro', price: '4000', stock: 99, image: '/placeholder.png' },
+          { id: 2, title: 'CANVA DESIGNER 1 BULAN', description: 'Unlock semua fitur', price: '5000', stock: 50, image: '/placeholder.png' },
+          { id: 3, title: 'CANVA PRO 1 TAHUN', description: 'Bisa akses semua fitur pro', price: '9000', stock: 20, image: '/placeholder.png' }
+        ];
+        // Simpan data awal ini ke Redis
+        await fetch(`${KV_URL}/set/nerestore_products`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(JSON.stringify(products))
+        });
       }
-
-      await sql`
-        INSERT INTO products (title, description, price, stock, image)
-        VALUES (${title}, ${description}, ${price}, ${Number(stock) || 0}, ${image || '/placeholder.png'});
-      `;
-      return res.status(201).json({ message: 'Produk berhasil disimpan ke database!' });
+      // Urutkan produk terbaru di atas
+      return res.status(200).json(products.sort((a, b) => b.id - a.id));
     }
 
-    // 3. Hapus Produk Secara Permanen
+    // 2. Tambah Produk Baru
+    if (req.method === 'POST') {
+      const newProduct = req.body;
+      newProduct.id = Date.now(); // Buat ID unik
+      newProduct.image = newProduct.image || '/placeholder.png';
+
+      // Ambil data yang sudah ada
+      const getRes = await fetch(`${KV_URL}/get/nerestore_products`, { headers });
+      const getData = await getRes.json();
+      let products = getData.result ? JSON.parse(getData.result) : [];
+
+      // Masukkan produk baru
+      products.push(newProduct);
+
+      // Simpan kembali ke Redis
+      await fetch(`${KV_URL}/set/nerestore_products`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(JSON.stringify(products))
+      });
+
+      return res.status(201).json({ message: 'Produk berhasil disimpan ke Redis!' });
+    }
+
+    // 3. Hapus Produk
     if (req.method === 'DELETE') {
       const { id } = req.query;
-      if (!id) return res.status(400).json({ message: 'ID diperlukan' });
+      
+      const getRes = await fetch(`${KV_URL}/get/nerestore_products`, { headers });
+      const getData = await getRes.json();
+      let products = getData.result ? JSON.parse(getData.result) : [];
 
-      await sql`DELETE FROM products WHERE id = ${id};`;
+      // Filter/hapus produk yang ID-nya sama
+      products = products.filter(p => String(p.id) !== String(id));
+
+      // Simpan data terbaru
+      await fetch(`${KV_URL}/set/nerestore_products`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(JSON.stringify(products))
+      });
+
       return res.status(200).json({ message: 'Produk berhasil dihapus!' });
     }
 
