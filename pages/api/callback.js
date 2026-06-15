@@ -5,15 +5,13 @@ export default async function handler(req, res) {
 
   try {
     const payload = req.body;
-    // INI CCTV KITA: Akan mencatat apa pun yang dikirim Pakasir ke Vercel Logs
     console.log("🚨 WEBHOOK DARI PAKASIR MASUK:", payload); 
 
-    // Mencari ID pesanan dari Pakasir (biasanya pakai order_id atau reference)
     const orderId = payload.order_id || payload.reference || payload.id; 
     const status = String(payload.status || payload.transaction_status || payload.state).toLowerCase();
     
-    // Pastikan status bayar lunas
-    const isSuccess = ['success', 'paid', 'settlement', 'berhasil'].includes(status);
+    // KODE YANG DI-UPDATE: Menambahkan 'completed' agar dikenali sebagai lunas
+    const isSuccess = ['success', 'paid', 'settlement', 'berhasil', 'completed'].includes(status);
 
     if (isSuccess && orderId) {
       const client = await clientPromise;
