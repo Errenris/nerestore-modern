@@ -1,11 +1,10 @@
 import Head from 'next/head'
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import ProductCard from '../components/ProductCard'
 import CartModal from '../components/CartModal'
-import productsRaw from '../data/products.json'
 
 function formatIDR(n) {
   const num = Number(n)
@@ -48,24 +47,34 @@ const itemVariants = {
 }
 
 export default function Home() {
+  const [dbProducts, setDbProducts] = useState([])
   const [cart, setCart] = useState([])
   const [open, setOpen] = useState(false)
   const [toast, setToast] = useState({ open: false, message: '' })
 
-  // Parallax Scroll Hooks
+  // Hubungkan live ke Database Vercel Postgres
+  useEffect(() => {
+    fetch('/api/products')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) setDbProducts(data)
+      })
+      .catch(err => console.error("Gagal memuat produk dari DB", err))
+  }, [])
+
   const { scrollYProgress } = useScroll()
   const bgY1 = useTransform(scrollYProgress, [0, 1], ['0%', '50%'])
   const bgY2 = useTransform(scrollYProgress, [0, 1], ['0%', '-50%'])
 
   const products = useMemo(() => {
-    return productsRaw.map((p) => ({
+    return dbProducts.map((p) => ({
       ...p,
       displayTitle: p.title
         .replace(/CANVA/gi, 'Canva')
         .replace(/PRO/gi, 'Premium')
         .replace(/DESIGNER/gi, 'Designer')
     }))
-  }, [])
+  }, [dbProducts])
 
   const showToast = (message) => {
     setToast({ open: true, message })
@@ -78,8 +87,6 @@ export default function Home() {
   }
 
   const total = cart.reduce((sum, p) => sum + (Number(p.price) || 0), 0)
-
-  // Split teks untuk animasi Text Reveal
   const titleWords = "Nerestore untuk kebutuhan digital kamu.".split(" ")
 
   return (
@@ -91,84 +98,31 @@ export default function Home() {
       </Head>
 
       <div className="relative min-h-screen overflow-hidden bg-slate-950 text-white">
-        
-        {/* PARALLAX BACKGROUND */}
         <div className="fixed inset-0 -z-10 overflow-hidden">
-          <motion.div 
-            style={{ y: bgY1 }}
-            className="absolute -top-[10%] -left-[10%] w-[50vw] h-[50vw] rounded-full bg-cyan-500/10 blur-[100px]" 
-          />
-          <motion.div 
-            style={{ y: bgY2 }}
-            className="absolute top-[40%] -right-[10%] w-[40vw] h-[40vw] rounded-full bg-violet-500/10 blur-[100px]" 
-          />
+          <motion.div style={{ y: bgY1 }} className="absolute -top-[10%] -left-[10%] w-[50vw] h-[50vw] rounded-full bg-cyan-500/10 blur-[100px]" />
+          <motion.div style={{ y: bgY2 }} className="absolute top-[40%] -right-[10%] w-[40vw] h-[40vw] rounded-full bg-violet-500/10 blur-[100px]" />
           <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:72px_72px] opacity-30" />
         </div>
 
         <Header cartCount={cart.length} onCart={() => setOpen(true)} />
 
         <main className="mx-auto max-w-7xl pb-16 pt-10">
-          <motion.section 
-            variants={containerVariants}
-            initial="hidden"
-            animate="show"
-            className="grid items-center gap-10 px-4 py-12 sm:px-6 lg:px-8 lg:grid-cols-2"
-          >
+          <motion.section variants={containerVariants} initial="hidden" animate="show" className="grid items-center gap-10 px-4 py-12 sm:px-6 lg:px-8 lg:grid-cols-2">
             <motion.div variants={itemVariants}>
-              <motion.div 
-                whileHover={{ scale: 1.05 }}
-                className="mb-5 inline-flex cursor-pointer rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm text-cyan-200 backdrop-blur"
-              >
-                ✨ Digital Store Premium
-              </motion.div>
-
-              {/* TEXT REVEAL ANIMATION */}
+              <motion.div whileHover={{ scale: 1.05 }} className="mb-5 inline-flex cursor-pointer rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm text-cyan-200 backdrop-blur">✨ Digital Store Premium</motion.div>
               <h1 className="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl flex flex-wrap gap-x-3 gap-y-1">
                 {titleWords.map((word, index) => (
-                  <motion.span
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1, type: "spring", stiffness: 120 }}
-                    className="liquid-text inline-block"
-                  >
-                    {word}
-                  </motion.span>
+                  <motion.span key={index} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: index * 0.1, type: "spring", stiffness: 120 }} className="liquid-text inline-block">{word}</motion.span>
                 ))}
               </h1>
-
-              <motion.p variants={itemVariants} className="mt-5 max-w-xl text-base leading-8 text-slate-300">
-                Belanja produk digital, tools, template, dan layanan bot dengan proses cepat, tampilan modern, dan support admin responsif.
-              </motion.p>
-
+              <motion.p variants={itemVariants} className="mt-5 max-w-xl text-base leading-8 text-slate-300">Belanja produk digital, tools, template, dan layanan bot dengan proses cepat, tampilan modern, dan support admin responsif.</motion.p>
               <motion.div variants={itemVariants} className="mt-8 flex flex-wrap gap-3">
-                <motion.a
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  href="#products"
-                  className="rounded-2xl bg-cyan-400 px-5 py-3 font-bold text-slate-950 shadow-[0_0_20px_rgba(34,211,238,0.4)] transition hover:bg-cyan-300"
-                >
-                  Lihat Produk
-                </motion.a>
-
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setOpen(true)}
-                  className="rounded-2xl border border-white/15 bg-white/10 px-5 py-3 font-bold text-white backdrop-blur transition hover:bg-white/15"
-                >
-                  Keranjang • Rp{formatIDR(total)}
-                </motion.button>
+                <motion.a whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} href="#products" className="rounded-2xl bg-cyan-400 px-5 py-3 font-bold text-slate-950 shadow-[0_0_20px_rgba(34,211,238,0.4)] transition hover:bg-cyan-300">Lihat Produk</motion.a>
+                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setOpen(true)} className="rounded-2xl border border-white/15 bg-white/10 px-5 py-3 font-bold text-white backdrop-blur transition hover:bg-white/15">Keranjang • Rp{formatIDR(total)}</motion.button>
               </motion.div>
-
               <motion.div variants={containerVariants} className="mt-8 grid gap-3 sm:grid-cols-3">
                 {highlights.map((item) => (
-                  <motion.div
-                    key={item.label}
-                    variants={itemVariants}
-                    whileHover={{ y: -5, backgroundColor: "rgba(255,255,255,0.15)" }}
-                    className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur transition-colors"
-                  >
+                  <motion.div key={item.label} variants={itemVariants} whileHover={{ y: -5, backgroundColor: "rgba(255,255,255,0.15)" }} className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur transition-colors">
                     <div className="text-xl">{item.icon}</div>
                     <div className="mt-2 text-2xl font-black">{item.value}</div>
                     <div className="text-sm text-slate-300">{item.label}</div>
@@ -176,25 +130,13 @@ export default function Home() {
                 ))}
               </motion.div>
             </motion.div>
-
-            <motion.div 
-              variants={itemVariants}
-              whileHover={{ y: -10, rotateY: -5, rotateX: 5 }}
-              style={{ perspective: 1000 }}
-              className="rounded-[2rem] border border-white/10 bg-white/10 p-5 shadow-[0_0_50px_rgba(139,92,246,0.15)] backdrop-blur transition-transform duration-500"
-            >
+            <motion.div variants={itemVariants} whileHover={{ y: -10, rotateY: -5, rotateX: 5 }} style={{ perspective: 1000 }} className="rounded-[2rem] border border-white/10 bg-white/10 p-5 shadow-[0_0_50px_rgba(139,92,246,0.15)] backdrop-blur transition-transform duration-500">
               <div className="rounded-[1.5rem] bg-slate-950/70 p-6">
                 <div className="text-sm text-cyan-200">Checkout Preview</div>
                 <div className="mt-3 text-3xl font-black">Cepat, aman, rapi.</div>
-
                 <motion.div variants={containerVariants} className="mt-6 space-y-3">
                   {features.map((item) => (
-                    <motion.div
-                      key={item.title}
-                      variants={itemVariants}
-                      whileHover={{ x: 10, backgroundColor: "rgba(255,255,255,0.1)" }}
-                      className="rounded-2xl border border-white/10 bg-white/5 p-4 transition-colors"
-                    >
+                    <motion.div key={item.title} variants={itemVariants} whileHover={{ x: 10, backgroundColor: "rgba(255,255,255,0.1)" }} className="rounded-2xl border border-white/10 bg-white/5 p-4 transition-colors">
                       <div className="flex gap-3">
                         <div className="text-2xl">{item.icon}</div>
                         <div>
@@ -209,40 +151,20 @@ export default function Home() {
             </motion.div>
           </motion.section>
 
-          {/* INFINITE MARQUEE */}
           <div className="mt-10 overflow-hidden border-y border-white/10 bg-white/5 py-4 backdrop-blur-md">
             <div className="animate-marquee flex gap-12 text-sm font-bold tracking-[0.2em] uppercase text-cyan-200/80">
-              {/* Grup ke-1 */}
               <span className="flex items-center gap-12 whitespace-nowrap">
-                <span>⚡ PROSES KILAT</span><span>•</span>
-                <span>🛡️ TRANSAKSI AMAN</span><span>•</span>
-                <span>✨ TAMPILAN PREMIUM</span><span>•</span>
-                <span>💎 GARANSI LAYANAN</span><span>•</span>
+                <span>⚡ PROSES KILAT</span><span>•</span><span>🛡️ TRANSAKSI AMAN</span><span>•</span><span>✨ TAMPILAN PREMIUM</span><span>•</span><span>💎 GARANSI LAYANAN</span><span>•</span>
               </span>
-              {/* Grup ke-2 untuk looping mulus */}
               <span className="flex items-center gap-12 whitespace-nowrap" aria-hidden="true">
-                <span>⚡ PROSES KILAT</span><span>•</span>
-                <span>🛡️ TRANSAKSI AMAN</span><span>•</span>
-                <span>✨ TAMPILAN PREMIUM</span><span>•</span>
-                <span>💎 GARANSI LAYANAN</span><span>•</span>
+                <span>⚡ PROSES KILAT</span><span>•</span><span>🛡️ TRANSAKSI AMAN</span><span>•</span><span>✨ TAMPILAN PREMIUM</span><span>•</span><span>💎 GARANSI LAYANAN</span><span>•</span>
               </span>
             </div>
           </div>
 
-          <motion.section 
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: "-100px" }}
-            className="grid gap-4 py-12 px-4 sm:px-6 lg:px-8 sm:grid-cols-3"
-          >
+          <motion.section variants={containerVariants} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} className="grid gap-4 py-12 px-4 sm:px-6 lg:px-8 sm:grid-cols-3">
             {stats.map((item) => (
-              <motion.div
-                key={item.label}
-                variants={itemVariants}
-                whileHover={{ scale: 1.05 }}
-                className="rounded-3xl border border-white/10 bg-white/10 p-5 backdrop-blur"
-              >
+              <motion.div key={item.label} variants={itemVariants} whileHover={{ scale: 1.05 }} className="rounded-3xl border border-white/10 bg-white/10 p-5 backdrop-blur">
                 <div className="text-3xl font-black text-cyan-200">{item.value}</div>
                 <div className="mt-1 font-bold">{item.label}</div>
                 <div className="text-sm text-slate-300">{item.detail}</div>
@@ -250,67 +172,18 @@ export default function Home() {
             ))}
           </motion.section>
 
-          <motion.section 
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: "-100px" }}
-            className="py-10 px-4 sm:px-6 lg:px-8"
-          >
-            <motion.div variants={itemVariants} className="mb-7">
-              <h2 className="text-3xl font-black">Kenapa pilih Nerestore?</h2>
-              <p className="mt-2 text-slate-300">
-                Layanan dibuat simpel biar kamu bisa order tanpa ribet.
-              </p>
-            </motion.div>
-
-            <motion.div variants={containerVariants} className="grid gap-4 md:grid-cols-3">
-              {benefits.map((item) => (
-                <motion.div
-                  key={item.title}
-                  variants={itemVariants}
-                  whileHover={{ y: -10 }}
-                  className="rounded-3xl border border-white/10 bg-white/10 p-6 backdrop-blur"
-                >
-                  <div className="text-3xl">{item.icon}</div>
-                  <h3 className="mt-4 text-xl font-black">{item.title}</h3>
-                  <p className="mt-2 leading-7 text-slate-300">{item.body}</p>
-                </motion.div>
-              ))}
-            </motion.div>
-          </motion.section>
-
           <section id="products" className="py-10 px-4 sm:px-6 lg:px-8">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="mb-7 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"
-            >
+            <div className="mb-7 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <h2 className="text-3xl font-black">Produk Digital</h2>
-                <p className="mt-2 text-slate-300">
-                  Pilih produk, masuk keranjang, lalu checkout via WhatsApp.
-                </p>
+                <p className="mt-2 text-slate-300">Pilih produk, masuk keranjang, lalu checkout otomatis.</p>
               </div>
-
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setOpen(true)}
-                className="rounded-2xl border border-cyan-300/30 bg-cyan-300/10 px-5 py-3 font-bold text-cyan-100 transition hover:bg-cyan-300/20"
-              >
-                Buka Keranjang ({cart.length})
-              </motion.button>
-            </motion.div>
+              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setOpen(true)} className="rounded-2xl border border-cyan-300/30 bg-cyan-300/10 px-5 py-3 font-bold text-cyan-100 transition hover:bg-cyan-300/20">Buka Keranjang ({cart.length})</motion.button>
+            </div>
 
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {products.map((product) => (
-                <ProductCard
-                  key={product.id || product.title}
-                  product={product}
-                  onAdd={() => addToCart(product)}
-                />
+                <ProductCard key={product.id} product={product} onAdd={() => addToCart(product)} />
               ))}
             </div>
           </section>
@@ -318,17 +191,9 @@ export default function Home() {
 
         <AnimatePresence>
           {toast.open && (
-            <motion.div 
-              initial={{ opacity: 0, y: 50, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 50, scale: 0.9 }}
-              className="fixed bottom-5 right-5 z-50 max-w-sm rounded-2xl border border-white/10 bg-white px-5 py-4 text-sm font-bold text-slate-950 shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
-            >
-              {toast.message}
-            </motion.div>
+            <motion.div initial={{ opacity: 0, y: 50, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 50, scale: 0.9 }} className="fixed bottom-5 right-5 z-50 max-w-sm rounded-2xl border border-white/10 bg-white px-5 py-4 text-sm font-bold text-slate-950 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">{toast.message}</motion.div>
           )}
         </AnimatePresence>
-
         <CartModal open={open} setOpen={setOpen} cart={cart} setCart={setCart} />
         <Footer />
       </div>
