@@ -15,6 +15,7 @@ html {
 body {
   @apply bg-slate-950 text-gray-100 antialiased;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  /* Menyembunyikan cursor default jika ingin totalitas, tapi kita biarkan saja agar lebih natural dan digabung glow */
 }
 
 body::before {
@@ -48,12 +49,6 @@ body::before {
   mask: linear-gradient(#000, transparent 58%);
 }
 
-.card {
-  @apply rounded-2xl bg-slate-800/60 p-4 shadow-lg backdrop-blur-md;
-}
-
-/* --- ANIMASI BARU DITAMBAHKAN DI BAWAH SINI --- */
-
 @keyframes float {
   0% { transform: translateY(0px); }
   50% { transform: translateY(-15px); }
@@ -75,10 +70,32 @@ body::before {
 }
 
 @keyframes liquid-shine {
-  from {
-    background-position: 0% 50%;
-  }
-  to {
-    background-position: 100% 50%;
-  }
+  from { background-position: 0% 50%; }
+  to { background-position: 100% 50%; }
+}
+
+/* --- ANIMASI BARU (MARQUEE & CURSOR) --- */
+@keyframes marquee {
+  from { transform: translateX(0%); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 15s linear infinite;
+}
+
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(34,211,238,0.15) 0%, transparent 60%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: screen;
 }
