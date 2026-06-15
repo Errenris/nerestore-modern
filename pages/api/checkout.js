@@ -26,7 +26,7 @@ export default async function handler(req, res) {
       'QRIS', // Metode Pembayaran utama
       amount,
       false, // Jangan buat direct QRIS, agar masuk ke Payment Page
-      'https://nerestoree.vercel.app/' // URL kembali setelah sukses bayar
+      'https://nerestore.vercel.app/' // URL kembali setelah sukses bayar
     );
 
     // Mengecek apakah Pakasir mengembalikan URL pembayaran
