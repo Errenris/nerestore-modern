@@ -7,8 +7,6 @@ import ProductCard from '../components/ProductCard'
 import CartModal from '../components/CartModal'
 import productsRaw from '../data/products.json'
 
-// ... (dan lanjutan kode ke bawahnya)
-
 function formatIDR(n) {
   const num = Number(n)
   if (!Number.isFinite(num)) return String(n)
