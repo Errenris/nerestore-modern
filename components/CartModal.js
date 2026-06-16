@@ -1,44 +1,57 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 
-// Kunci utamanya ada di "isOpen = true", ini yang mencegah error keranjang ga bisa dibuka
-export default function CartModal({ isOpen = true, cart = [], onClose, onRemove, onCheckout }) {
+// KATA SANDI SUDAH DISAMAKAN DENGAN index.js (open, setOpen, cart, setCart)
+export default function CartModal({ open, setOpen, cart, setCart }) {
   const [isCheckingOut, setIsCheckingOut] = useState(false)
 
-  // Hitung total harga (dengan pengaman kalau cart kosong)
-  const total = cart.reduce((acc, item) => acc + (Number(item.price) || 0), 0)
+  // Hitung total harga
+  const total = cart?.reduce((acc, item) => acc + (Number(item.price) || 0), 0) || 0
 
-  const handleCheckoutQRIS = () => {
+  // Logika Checkout QRIS Otomatis
+  const handleCheckoutQRIS = async () => {
     setIsCheckingOut(true)
-    if (onCheckout) onCheckout()
+    try {
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cart })
+      })
+      
+      const data = await response.json()
+      if (response.ok && data.paymentUrl) {
+        window.location.href = data.paymentUrl // Pindah ke halaman QRIS
+      } else {
+        alert("Gagal memproses pembayaran: " + (data.message || 'Error'))
+        setIsCheckingOut(false)
+      }
+    } catch (error) {
+      alert("Terjadi kesalahan jaringan.")
+      setIsCheckingOut(false)
+    }
   }
 
   // === FITUR BARU: BELI VIA WA ===
   const handleCheckoutWA = () => {
-    // 1. Ganti dengan nomor WA Admin (Gunakan format 62 tanpa + atau 0)
-    const adminPhone = "6281234567890" 
-    
-    // 2. Buat rincian pesanan dari keranjang
+    const adminPhone = "6289601570287" // Nomor WA Admin
     let orderDetails = cart.map((item, index) => `${index + 1}. ${item.title} (Rp ${new Intl.NumberFormat('id-ID').format(Number(item.price))})`).join('%0A')
-    
-    // 3. Buat format pesan WA
     const message = `Halo Admin Nerestore, saya mau order manual nih:%0A%0A*Rincian Pesanan:*%0A${orderDetails}%0A%0A*Total Pembayaran:* Rp ${new Intl.NumberFormat('id-ID').format(total)}%0A%0AMohon info rekening pembayarannya ya. Terima kasih!`
     
-    // 4. Arahkan pembeli ke WhatsApp
     window.open(`https://wa.me/${adminPhone}?text=${message}`, '_blank')
   }
 
   return (
     <AnimatePresence>
-      {isOpen && (
+      {/* Jika 'open' bernilai true, keranjang muncul */}
+      {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           
-          {/* Latar Belakang Gelap */}
+          {/* Latar Belakang Gelap (Klik untuk tutup) */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={onClose}
+            onClick={() => setOpen(false)}
             className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm"
           />
 
@@ -58,22 +71,22 @@ export default function CartModal({ isOpen = true, cart = [], onClose, onRemove,
                   <span className="text-cyan-400">🛒</span> Keranjang
                 </h2>
                 <button 
-                  onClick={onClose} 
+                  onClick={() => setOpen(false)} 
                   className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white transition"
                 >
                   ✕
                 </button>
               </div>
 
-              {cart.length === 0 ? (
-                <div className="text-center py-10">
+              {!cart || cart.length === 0 ? (
+                <div className="text-center py-10 relative z-10">
                   <div className="text-4xl mb-3">📦</div>
                   <p className="text-slate-400 font-medium">Keranjang kamu masih kosong.</p>
                 </div>
               ) : (
                 <>
                   {/* Daftar Item di Keranjang */}
-                  <div className="max-h-[50vh] overflow-y-auto pr-2 space-y-3 mb-6 custom-scrollbar">
+                  <div className="max-h-[50vh] overflow-y-auto pr-2 space-y-3 mb-6 custom-scrollbar relative z-10">
                     {cart.map((item, idx) => (
                       <div key={idx} className="flex items-center justify-between bg-black/40 p-3 rounded-xl border border-white/5">
                         <div className="flex-1 truncate pr-4">
@@ -82,8 +95,9 @@ export default function CartModal({ isOpen = true, cart = [], onClose, onRemove,
                             Rp {new Intl.NumberFormat('id-ID').format(Number(item.price))}
                           </p>
                         </div>
+                        {/* Tombol Hapus Barang */}
                         <button
-                          onClick={() => onRemove(idx)}
+                          onClick={() => setCart(cart.filter((_, i) => i !== idx))}
                           className="text-rose-400 hover:text-rose-300 p-2 rounded-lg hover:bg-rose-500/10 transition"
                           title="Hapus"
                         >
@@ -96,7 +110,7 @@ export default function CartModal({ isOpen = true, cart = [], onClose, onRemove,
                   </div>
 
                   {/* Bagian Bawah (Total & Tombol) */}
-                  <div className="border-t border-white/10 pt-5">
+                  <div className="border-t border-white/10 pt-5 relative z-10">
                     <div className="flex justify-between items-end mb-6">
                       <span className="text-sm font-semibold text-slate-400 uppercase tracking-widest">Total Tagihan</span>
                       <span className="text-2xl font-black text-white">
@@ -105,7 +119,8 @@ export default function CartModal({ isOpen = true, cart = [], onClose, onRemove,
                     </div>
 
                     {/* TOMBOL PEMBAYARAN */}
-                    <div className="space-y-3">
+                    <div className="space-y-3 relative z-10">
+                      
                       {/* Tombol QRIS Otomatis */}
                       <button
                         disabled={isCheckingOut}
