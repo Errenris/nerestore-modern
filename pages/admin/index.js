@@ -10,11 +10,11 @@ export default function AdminDashboard() {
   const [isEditing, setIsEditing] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   
-  // Menggunakan satu form state yang sama untuk nambah dan ngedit
   const [form, setForm] = useState({ id: '', title: '', price: '', description: '', linksData: '' })
 
   const refreshProducts = () => {
-    fetch('/api/products').then(res => res.json()).then(data => {
+    // INI YANG BERUBAH: Tambahkan ?admin=true agar database ngasih lihat link-nya
+    fetch('/api/products?admin=true').then(res => res.json()).then(data => {
       if (Array.isArray(data)) setProducts(data)
     })
   }
@@ -45,7 +45,6 @@ export default function AdminDashboard() {
     setIsLoading(false)
   }
 
-  // Fungsi untuk menarik data produk ke form untuk diedit
   const startEdit = (p) => {
     setIsEditing(true)
     setIsAdding(false)
@@ -54,7 +53,7 @@ export default function AdminDashboard() {
       title: p.title,
       price: p.price,
       description: p.description,
-      // Menggabungkan array link kembali menjadi teks per baris di textarea
+      // Nah sekarang link-nya sudah ada dan akan muncul di kotak form!
       linksData: p.links ? p.links.join('\n') : '' 
     })
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -100,8 +99,9 @@ export default function AdminDashboard() {
                 <input required placeholder="Deskripsi Singkat" className="bg-black/30 px-4 py-3 rounded-xl border border-white/10 sm:col-span-2" value={form.description} onChange={e => setForm({...form, description: e.target.value})} />
                 <div className="sm:col-span-2">
                   <label className="text-sm text-cyan-200 mb-2 block">Daftar Link Akses / Produk Digital (1 baris = 1 Link/Stok)</label>
-                  <textarea required placeholder="https://canva.com/invite/link1...&#10;https://canva.com/invite/link2..." rows="5" className="w-full bg-black/30 px-4 py-3 rounded-xl border border-white/10 font-mono text-sm leading-relaxed" value={form.linksData} onChange={e => setForm({...form, linksData: e.target.value})} />
-                  <p className="text-xs text-slate-400 mt-2">Stok produk otomatis terhitung dari jumlah baris yang kamu isi di atas. Mau ubah stok jadi 50? Isi 50 baris link.</p>
+                  {/* Rows diubah jadi 8 biar lega liat link-nya */}
+                  <textarea required placeholder="https://canva.com/invite/link1...&#10;https://canva.com/invite/link2..." rows="8" className="w-full bg-black/30 px-4 py-3 rounded-xl border border-white/10 font-mono text-sm leading-relaxed whitespace-pre-wrap" value={form.linksData} onChange={e => setForm({...form, linksData: e.target.value})} />
+                  <p className="text-xs text-slate-400 mt-2">Sisa stok produk saat ini bisa dilihat dari jumlah baris link di kotak atas.</p>
                 </div>
               </div>
               <button disabled={isLoading} type="submit" className="mt-5 w-full bg-cyan-400 text-slate-950 font-bold py-3 rounded-xl hover:bg-cyan-300 transition">
