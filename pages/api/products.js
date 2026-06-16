@@ -8,10 +8,17 @@ export default async function handler(req, res) {
 
     // 1. Ambil Semua Produk
     if (req.method === 'GET') {
+      const { admin } = req.query; // Cek apakah yang minta adalah halaman Admin
       const products = await collection.find({}).sort({ id: -1 }).toArray();
-      // Sembunyikan daftar link rahasia agar tidak bocor ke pembeli yang iseng ngecek API
-      const safeProducts = products.map(p => ({ ...p, links: undefined }));
-      return res.status(200).json(safeProducts);
+      
+      if (admin === 'true') {
+        // Jika Admin, kasih lihat data full termasuk link rahasianya
+        return res.status(200).json(products);
+      } else {
+        // Jika pembeli (halaman depan), sembunyikan link-nya biar aman
+        const safeProducts = products.map(p => ({ ...p, links: undefined }));
+        return res.status(200).json(safeProducts);
+      }
     }
 
     // 2. Tambah Produk Baru
@@ -31,7 +38,7 @@ export default async function handler(req, res) {
       return res.status(201).json({ message: 'Produk berhasil disimpan!' });
     }
 
-    // 3. EDIT / UPDATE PRODUK LAMA (INI YANG BARU)
+    // 3. Edit / Update Produk Lama
     if (req.method === 'PUT') {
       const { id, title, description, price, linksData, image } = req.body;
       const linkArray = linksData ? linksData.split('\n').map(l => l.trim()).filter(l => l !== '') : [];
@@ -43,7 +50,7 @@ export default async function handler(req, res) {
             title, 
             description, 
             price, 
-            stock: linkArray.length, // Stok otomatis update menyesuaikan jumlah baris link
+            stock: linkArray.length, // Stok dihitung ulang
             links: linkArray, 
             image: image || '/placeholder.png' 
           } 
