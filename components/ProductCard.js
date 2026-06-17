@@ -2,7 +2,7 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 
 export default function ProductCard({ product, onAdd }) {
   const isNumericPrice = String(product.price).match(/^\d+$/)
-  
+
   // LOGIKA BARU: Cek apakah stok habis (0 atau kurang)
   const isOutOfStock = Number(product.stock) <= 0;
 
@@ -50,18 +50,18 @@ export default function ProductCard({ product, onAdd }) {
           style={{ transform: "translateZ(-30px)" }} 
           className={`absolute -right-16 -top-16 h-36 w-36 rounded-full blur-3xl transition duration-500 ${isOutOfStock ? 'bg-rose-500/10 group-hover:bg-rose-500/20' : 'bg-cyan-300/20 group-hover:bg-cyan-300/40'}`} 
         />
-        
+
         <div style={{ transform: "translateZ(20px)" }} className="relative overflow-hidden rounded-[1.5rem] border border-white/15 bg-slate-950/40 shadow-inner">
           <motion.img
             whileHover={isOutOfStock ? {} : { scale: 1.1 }}
             transition={{ duration: 0.6 }}
             src={product.image || '/placeholder.png'}
-            alt={product.displayTitle || product.title}
+            alt={product.title} // <-- SUDAH DIPERBAIKI
             // FOTO JADI GELAP KALAU HABIS
             className={`h-48 w-full object-cover transition duration-300 ${isOutOfStock ? 'opacity-40 grayscale' : 'opacity-90 saturate-125'}`}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-white/10" />
-          
+
           <div className="absolute left-3 top-3 rounded-full border border-white/20 bg-white/15 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-white/85 backdrop-blur-xl">
             Digital
           </div>
@@ -78,7 +78,7 @@ export default function ProductCard({ product, onAdd }) {
 
         <div style={{ transform: "translateZ(40px)" }} className="relative mt-5 flex h-full flex-col">
           <h3 className={`text-lg font-black leading-snug tracking-tight transition-colors ${isOutOfStock ? 'text-slate-400' : 'text-white group-hover:text-cyan-300'}`}>
-            {product.displayTitle || product.title}
+            {product.title} {/* <-- INI KUNCI UTAMANYA: Mengambil nama murni dari database */}
           </h3>
           <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-300/85">{product.description}</p>
 
@@ -92,7 +92,7 @@ export default function ProductCard({ product, onAdd }) {
                   <div className={`mt-1 text-lg font-extrabold ${isOutOfStock ? 'text-slate-400' : 'text-amber-200'}`}>{String(product.price)}</div>
                 )}
               </div>
-              
+
               {/* TAMPILAN SISA STOK */}
               <div className="text-right">
                 <div className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200/60">Sisa Stok</div>
