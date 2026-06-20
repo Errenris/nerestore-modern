@@ -36,6 +36,6 @@ export default async function handler(req, res) {
       res.status(400).json({ message: 'Pakasir gagal memproses' })
     }
   } catch (error) {
-    res.status(500).json({ message: 'Internal Server Error Silahkan order manual' })
+    res.status(500).json({ message: 'LAGI EROR GAIS ORDER MANUAL DULU YA🫶🏻' })
   }
 }
