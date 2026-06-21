@@ -80,7 +80,7 @@ export default function ProductCard({ product, onAdd }) {
           <h3 className={`text-lg font-black leading-snug tracking-tight transition-colors ${isOutOfStock ? 'text-slate-400' : 'text-white group-hover:text-cyan-300'}`}>
             {product.title} {/* <-- INI KUNCI UTAMANYA: Mengambil nama murni dari database */}
           </h3>
-          <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-300/85">{product.description}</p>
+         <p className="mt-2 text-sm leading-6 text-slate-300/85">{product.description}</p>
 
           <div className="mt-auto pt-5">
             <div className="mb-4 flex items-end justify-between gap-3">
